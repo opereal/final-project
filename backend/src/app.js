@@ -8,7 +8,7 @@ const authRoutes = require("./routes/authRoute");
 
 // cors option object to establish handshake with client
 const corsOptions = {
-  origin: "http://localhost:3000", // frontend url
+  origin: "https://shopper-final-project.vercel.app", // frontend url
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various versions of Safari) choke on 204
   credentials: true,
 };
