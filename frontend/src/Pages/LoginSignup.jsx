@@ -1,34 +1,76 @@
-import React,{useState} from 'react'
-import './CSS/LoginSignup.css'
+import React, {useState, useEffect} from "react";
+import { useSelector } from "react-redux";
+import {useNavigate} from "react-router-dom"
+import { useLoginUserMutation } from "../lib/apis/authApi";
+import { useGetCurrentUserMutation } from "../lib/apis/userApi";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
 const LoginSignup = () => {
 
-  const [state,SetState] = useState("SignUp")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const {user} = useSelector(state => state.userState);
+
+  const [loginUser, {data, isSuccess, isError, error}] = useLoginUserMutation();
+  const [getCurrentUser] = useGetCurrentUserMutation();
+
+  const onLoginUser  = (event) => {
+    event.preventDefault();
+
+    if(!email || !password){
+      return
+    }
+
+    loginUser({email, password});
+  }
+
+
+  useEffect(() => {
+    if(user || isSuccess){
+      navigate("/");
+    }
+  },  [user, isSuccess]);
+
+  useEffect(() => {
+    getCurrentUser();
+  }, [])
+
+  
+
+
   return (
-    <div className='loginsignup'>
-      <div className="loginSignup-container">
-        <h1>{state}</h1>
-        <div className="loginsignup-fields">
-          <input type="text" placeholder="Your Name"/>
-          <input type="email" placeholder="Email Address"/>
-          <input type="password" placeholder="Password"/>
+    <Container style={{ marginTop: "100px" }}>
+      <Row>
+        <Col md={3} />
+        <Col md={6}>
+          <div className="mt-3 mb-5">
+            <h1>Sign up to get started</h1>
+          </div>
 
-        </div>
+          {isError && <div className="mb-5 alert alert-danger" role="alert">
+           {error?.data?.error || "something went wrong"}
+          </div>}
+          <Form onSubmit={onLoginUser}>
+            <Form.Group className="mb-3">
+              <Form.Control placeholder="Email" type="text" onChange={(event) => setEmail(event.target.value)} />
+            </Form.Group>
 
-        <button>Continue</button>
-      <p className="loginsignup-login">Already have an account? <span> Login here</span></p>
-      <div className="loginsignup-agree">
-        <input type="checkbox" name="" id=""/>
-        <p>By continuing, i agree to the terms of use & privacy policy. </p>
+            <Form.Group className="mb-3">
+              <Form.Control placeholder="password" type="password" onChange={(event) => setPassword(event.target.value)} />
+            </Form.Group>
 
-      </div>
-    
+            <Form.Group className="mt-3 mb-5">
+              <Button style={{ width: "100%" }} type="submit">Sign up</Button>
+            </Form.Group>
+          </Form>
+        </Col>
+        <Col md={3} />
+      </Row>
+    </Container>
+  );
+};
 
-      </div>
-
-
-    </div>
-  )
-}
-
-export default LoginSignup
+export default LoginSignup;

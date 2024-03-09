@@ -1,21 +1,33 @@
-import React, {useContext,useRef,useState} from 'react'
+import React, {useContext,useRef,useState, useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import './Navbar.css'
 import cart from '../Assets/cart.png'
 import logo from '../Assets/logo.png'
 import {ShopContext} from '../../Context/ShopContext'
+import { useSelector } from 'react-redux'
+import { useLogoutUserMutation } from '../../lib/apis/authApi'
+import { useGetCurrentUserMutation } from '../../lib/apis/userApi'
 import navdropdown from '../Assets/navdropdown.png'
 
  const Navbar = () => {
   const [menu,setMenu] = useState("Shop");
   const {getTotalCartItems}=useContext(ShopContext);
+
+  const [logoutUser, {isSuccess}] = useLogoutUserMutation()
+  const [getCurrentUser, {data}] = useGetCurrentUserMutation()
   const menuRef = useRef()
+
+  const {user} = useSelector(state => state.userState)
 
   const dropdown_toggle = (e) =>{
     menuRef.current.classList.toggle('nav-menu-visible');
     e.target.classList.toggle('open');
 
   }
+
+  useEffect(() => {
+    getCurrentUser()
+  }, [])
   
   
   
@@ -37,7 +49,9 @@ import navdropdown from '../Assets/navdropdown.png'
 </ul>
 
 <div className="nav-login-cart">
-    <Link to='/login'><button>Login</button></Link>
+  {!user &&  <Link to='/login'><button>Login</button></Link>}
+  {user &&  <Link onClick={logoutUser}><button>Logout</button></Link>}
+   
     <Link to='/cart'><img src={cart} alt=""/></Link>
     <div className="nav-cart-count">{getTotalCartItems()}</div>
 </div>
