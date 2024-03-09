@@ -14,7 +14,7 @@ const LoginSignup = () => {
 
   const {user} = useSelector(state => state.userState);
 
-  const [loginUser, {data, isSuccess, isError, error}] = useLoginUserMutation();
+  const [loginUser, {data, isSuccess, isError, error, isLoading}] = useLoginUserMutation();
   const [getCurrentUser] = useGetCurrentUserMutation();
 
   const onLoginUser  = (event) => {
@@ -63,7 +63,7 @@ const LoginSignup = () => {
             </Form.Group>
 
             <Form.Group className="mt-3 mb-5">
-              <Button style={{ width: "100%" }} type="submit">Sign up</Button>
+              <Button style={{ width: "100%" }} type="submit">{isLoading ? "Please wait..." : "Sign up"}</Button>
             </Form.Group>
           </Form>
         </Col>
