@@ -6,8 +6,24 @@
 
 }
 
+.card-body {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .item p{
     margin:6px 0px;
+}
+
+.product-link {
+    text-decoration: none;
+}
+
+.old-price {
+text-decoration: line-through red;
+color: #8c8c8c;
+
 }
 
 .item-prices{
